@@ -36,37 +36,20 @@ nav button{border:0;background:#fff;color:var(--muted);font-size:11px;padding:5p
     </section>
     <section id="detail" class="screen"><div class="head"><h2>商品詳細</h2><p>容量・挽き方・数量を選択</p></div><div id="detailCard"></div></section>
     <section id="cart" class="screen"><div class="head"><h2>カート</h2><p>注文内容をご確認ください</p></div><div id="cartBody"></div></section>
-    <section id="checkout" class="screen"><div class="head"><h2>配送情報</h2><p>テスト用の入力画面です</p></div><div class="card">
-      <label>お名前</label><input id="name" value="山田 花子">
-      <label>郵便番号</label><input value="690-0000">
-      <label>住所</label><textarea>島根県雲南市木次町...</textarea>
-      <label>決済方法</label><select><option>Square テスト決済</option></select>
-      <button class="btn wide" onclick="pay()">テスト決済へ進む</button>
-    </div></section>
+    <section id="checkout" class="screen"><div class="head"><h2>配送情報</h2><p>テスト用の入力画面です</p></div><div class="card"><label>お名前</label><input id="name" value="山田 花子"><label>郵便番号</label><input value="690-0000"><label>住所</label><textarea>島根県雲南市木次町...</textarea><label>決済方法</label><select><option>Square テスト決済</option></select><button class="btn wide" onclick="pay()">テスト決済へ進む</button></div></section>
     <section id="pay" class="screen"><div class="head"><h2>テスト決済</h2><p>実際の請求は発生しません</p></div><div class="card"><h3>Square Sandbox</h3><div id="payTotal" class="line total"></div><label>テストカード</label><input value="4242 4242 4242 4242" readonly><button class="btn wide" onclick="complete()">注文を確定する</button></div></section>
     <section id="complete" class="screen"><div class="head"><h2>ご注文ありがとうございます</h2></div><div class="card"><h3>テスト注文を受け付けました</h3><p id="completeText"></p></div><button id="lineSend" class="btn wide" style="display:none" onclick="sendLine()">注文内容をLINEへ送る</button><button class="btn secondary wide" onclick="show('home')">商品一覧へ戻る</button></section>
     <section id="orders" class="screen"><div class="head"><h2>注文確認</h2><p>この端末で作成したテスト注文</p></div><div id="ordersBody"></div></section>
     <section id="info" class="screen"><div class="head"><h2>ショップ情報</h2></div><div class="card"><h3>タカヒロコーヒー</h3><p>決済確認後、2〜3営業日以内に発送<br>送料 全国一律185円</p></div></section>
   </main>
-  <nav>
-    <button data-page="home" class="active" onclick="show('home')"><span>☕</span>商品</button>
-    <button data-page="cart" onclick="show('cart')"><span>🛒</span>カート</button>
-    <button data-page="orders" onclick="show('orders')"><span>📦</span>注文</button>
-    <button data-page="info" onclick="show('info')"><span>🏪</span>情報</button>
-  </nav>
+  <nav><button data-page="home" class="active" onclick="show('home')"><span>☕</span>商品</button><button data-page="cart" onclick="show('cart')"><span>🛒</span>カート</button><button data-page="orders" onclick="show('orders')"><span>📦</span>注文</button><button data-page="info" onclick="show('info')"><span>🏪</span>情報</button></nav>
 </div>
 <div id="toast" class="toast"></div>
 <script src="./config.js"></script>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-const defaults=[
- {name:'エチオピア イルガチェフェ',price:1980,note:'浅煎り・フローラルな香り',stock:12,icon:'🌸'},
- {name:'季節のブレンド',price:1580,note:'中深煎り・バランスの良い味わい',stock:35,icon:'☕'},
- {name:'デカフェ コロンビア',price:1780,note:'カフェインレス・優しい風味',stock:8,icon:'🌙'}
-];
-let products=JSON.parse(localStorage.getItem('takahiro-products')||'null')||defaults;
-let cart=[],selected=0,lastOrder=null,history=[];
-const yen=n=>'¥'+n.toLocaleString();
+const defaults=[{name:'エチオピア イルガチェフェ',price:1980,note:'浅煎り・フローラルな香り',stock:12,icon:'🌸'},{name:'季節のブレンド',price:1580,note:'中深煎り・バランスの良い味わい',stock:35,icon:'☕'},{name:'デカフェ コロンビア',price:1780,note:'カフェインレス・優しい風味',stock:8,icon:'🌙'}];
+let products=JSON.parse(localStorage.getItem('takahiro-products')||'null')||defaults;let cart=[],selected=0,lastOrder=null,history=[];const yen=n=>'¥'+n.toLocaleString();
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
 function show(id,push=true){const current=document.querySelector('.screen.active')?.id;if(push&&current&&current!==id)history.push(current);document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('nav button').forEach(e=>e.classList.toggle('active',e.dataset.page===id));if(id==='cart')renderCart();if(id==='orders')renderOrders();document.querySelector('main').scrollTop=0}
 function back(){history.length?show(history.pop(),false):show('home',false)}
@@ -78,7 +61,7 @@ function renderCart(){const e=document.getElementById('cartBody');if(!cart.lengt
 function pay(){if(!cart.length)return show('cart');const t=totals();document.getElementById('payTotal').innerHTML=`<span>お支払い合計</span><span>${yen(t.total)}</span>`;show('pay')}
 function complete(){const t=totals(),orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]');lastOrder={number:'TEST-'+Date.now().toString().slice(-6),product:cart.map(x=>x.name).join('・'),amount:t.total,date:new Date().toLocaleString('ja-JP')};orders.unshift(lastOrder);localStorage.setItem('takahiro-orders',JSON.stringify(orders.slice(0,20)));document.getElementById('completeText').innerHTML=`注文番号 <strong>${lastOrder.number}</strong><br>商品 ${lastOrder.product}<br>合計 ${yen(lastOrder.amount)}<br><br>これはテスト注文です。`;cart=[];show('complete');toast('テスト注文が完了しました')}
 function renderOrders(){const orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]');document.getElementById('ordersBody').innerHTML=orders.length?orders.map(o=>`<div class="card"><h3>${o.number}</h3><p>${o.product}<br>${yen(o.amount)}<br>${o.date}</p></div>`).join(''):'<div class="card"><h3>テスト注文はありません</h3></div>'}
-async function initLiff(){const id=window.APP_CONFIG?.liffId;if(!id||!window.liff)return;try{await liff.init({liffId:id});if(liff.isLoggedIn()){const p=await liff.getProfile();document.getElementById('profile').textContent=p.displayName+'さんとして接続中';document.getElementById('profile').classList.add('show');document.getElementById('name').value=p.displayName}if(liff.isInClient())document.getElementById('lineSend').style.display='block'}catch(e){console.error(e)}}
+async function initLiff(){const id=window.APP_CONFIG?.liffId;if(!id||!window.liff)return;try{await liff.init({liffId:id});const openedInsideLine=/\bLine\//i.test(navigator.userAgent);const launchedByLiff=new URLSearchParams(location.search).has('liff.state');if(openedInsideLine&&!liff.isInClient()&&!launchedByLiff){location.replace(`https://liff.line.me/${id}`);return}if(liff.isLoggedIn()){const p=await liff.getProfile();document.getElementById('profile').textContent=p.displayName+'さんとして接続中';document.getElementById('profile').classList.add('show');document.getElementById('name').value=p.displayName}if(liff.isInClient())document.getElementById('lineSend').style.display='block'}catch(e){console.error(e)}}
 async function sendLine(){if(!lastOrder||!liff.isInClient())return;await liff.sendMessages([{type:'text',text:`タカヒロコーヒー テスト注文\n注文番号: ${lastOrder.number}\n商品: ${lastOrder.product}\n合計: ${yen(lastOrder.amount)}`}]);toast('LINEへ送信しました')}
 renderProducts();initLiff();
 </script>

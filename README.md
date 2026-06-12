@@ -8,6 +8,14 @@ LINE上で商品選択からテスト注文まで確認するためのGitHub Pag
 - 管理画面: https://tak4580.github.io/coffee/admin.html
 - LIFF URL: https://liff.line.me/2010316929-viV90cPK
 
+LINE公式アカウントのリッチメニューやメッセージには、GitHub Pages URLではなく次のLIFF URLを設定してください。
+
+```text
+https://liff.line.me/2010316929-viV90cPK
+```
+
+LINE内でGitHub Pages URLが直接開かれた場合も、LIFF URLへ自動的に切り替えます。
+
 ユーザー画面はスマートフォン向け表示です。管理画面の商品変更とテスト注文は、同じ端末・同じブラウザの `localStorage` で共有されます。
 
 ## LINE Developers設定

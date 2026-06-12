@@ -52,6 +52,53 @@ window.APP_CONFIG = {
 LIFF IDは公開識別子です。チャネルシークレットやMessaging APIのアクセストークンは
 このファイルへ入れず、サーバー側の環境変数で管理してください。
 
+## リッチメニュー
+
+推奨構成と設定URLは `RICH_MENU.md` にまとめています。
+
+- 大枠: 珈琲豆を注文
+- 左下: 注文を確認
+- 中下: 受取・配送案内
+- 右下: 問い合わせ
+
+`?page=orders` と `?page=info` を付けたLIFF URLから、それぞれの画面を直接開けます。
+
+## LINE公式アカウントから注文通知を送る
+
+`backend/worker.js` は、注文確定後にMessaging APIで次の通知を送るための
+Cloudflare Workerです。
+
+- 購入者: LINE公式アカウントから注文確認
+- 店舗: 管理者のLINEへ新規注文通知
+
+LINEログインチャネルとMessaging APIチャネルは、同じLINE Developersの
+プロバイダー内に作成してください。購入者はLINE公式アカウントを友だち追加している
+必要があります。
+
+1. `backend/wrangler.toml.example` を `backend/wrangler.toml` として用意します。
+2. `LINE_LOGIN_CHANNEL_ID` にLINEログインチャネルIDを設定します。
+3. WorkerのSecretへMessaging APIチャネルアクセストークンを登録します。
+4. 店舗にも通知する場合は、管理者のLINEユーザーIDもSecretへ登録します。
+5. Workerをデプロイし、発行されたURLを `config.js` の `apiBaseUrl` に設定します。
+
+```sh
+cd backend
+wrangler secret put LINE_CHANNEL_ACCESS_TOKEN
+wrangler secret put LINE_ADMIN_USER_ID
+wrangler deploy
+```
+
+```js
+window.APP_CONFIG = {
+  liffId: '2010316929-viV90cPK',
+  apiBaseUrl: 'https://takahiro-coffee-order.example.workers.dev',
+  lineOfficialAccountUrl: ''
+};
+```
+
+LIFFアプリには `openid` Scopeが必要です。WorkerはIDトークンをLINE側で検証してから
+通知を送信します。アクセストークンと管理者ユーザーIDは `config.js` へ入れないでください。
+
 ## 実装済み
 
 - LIFF SDK初期化
@@ -60,11 +107,13 @@ LIFF IDは公開識別子です。チャネルシークレットやMessaging API
 - LINEプロフィール取得と配送名への反映
 - LINE内では購入画面だけを全画面表示
 - 注文完了内容のトーク送信、またはシェアターゲットピッカー共有
+- リッチメニューから注文確認・受取案内を直接表示
+- Messaging API通知用バックエンド
 
 ## 未接続
 
 - Squareの実決済
 - 注文データベース
-- Messaging APIによる発送通知
+- Messaging APIによる発送完了通知
 
 これらは秘密鍵を扱うバックエンドが必要です。現在のSquare画面は動作確認用の模擬決済です。

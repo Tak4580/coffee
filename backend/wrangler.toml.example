@@ -1,0 +1,11 @@
+name = "takahiro-coffee-order"
+main = "worker.js"
+compatibility_date = "2026-06-12"
+
+[vars]
+ALLOWED_ORIGIN = "https://tak4580.github.io"
+LINE_LOGIN_CHANNEL_ID = "LINEログインチャネルID"
+
+# 以下は `wrangler secret put` で登録します。
+# LINE_CHANNEL_ACCESS_TOKEN
+# LINE_ADMIN_USER_ID

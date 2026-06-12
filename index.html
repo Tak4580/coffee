@@ -30,23 +30,57 @@ nav button{border:0;background:#fff;color:#302b27;font-size:11px;padding:4px}nav
   <header><button onclick="back()">‹</button><strong>たかひろ珈琲</strong><button onclick="show('cart')">🛒</button></header>
   <div id="profile" class="profile"></div>
   <main>
-    <section id="home" class="screen active"><div class="hero"><div class="brand-copy">たかひろ珈琲</div></div><div class="notice">テスト版です。決済・注文は実際には送信されません。</div><div class="ornament"><span>⌁</span></div><div class="head"><h2>おすすめ商品</h2><p>お好みの豆を選んでください</p></div><div id="products"></div></section>
+    <section id="home" class="screen active">
+      <div class="hero"><div class="brand-copy">たかひろ珈琲</div></div>
+      <div class="notice">テスト版です。決済・注文は実際には送信されません。</div>
+      <div class="ornament"><span>⌁</span></div>
+      <div class="head"><h2>おすすめ商品</h2><p>お好みの豆を選んでください</p></div>
+      <div id="products"></div>
+    </section>
     <section id="detail" class="screen"><div class="head"><h2>商品詳細</h2><p>容量・挽き方・数量を選択</p></div><div id="detailCard"></div></section>
     <section id="cart" class="screen"><div class="head"><h2>カート</h2><p>注文内容をご確認ください</p></div><div id="cartBody"></div></section>
-    <section id="checkout" class="screen"><div class="head"><h2>受取・お支払い</h2><p>受取方法を選択してください</p></div><div class="card"><label>お名前</label><input id="name" value="山田 花子"><label>受取方法</label><div class="choice"><label><input type="radio" name="delivery" value="pickup" checked onchange="updateCheckout()"><span>手渡し</span></label><label><input type="radio" name="delivery" value="shipping" onchange="updateCheckout()"><span>郵送</span></label></div><div id="shippingFields" class="hidden"><label>郵便番号</label><input id="postal" inputmode="numeric" autocomplete="postal-code" placeholder="例：6991332" oninput="lookupAddress()"><div id="postalStatus" class="hint">7桁入力すると住所を自動入力します</div><label>住所</label><textarea id="address" autocomplete="street-address" placeholder="都道府県・市区町村・番地"></textarea></div><label>決済方法</label><input id="paymentMethod" value="現金（手渡し時）" readonly><button class="btn wide" onclick="reviewOrder()">注文内容を確認</button></div></section>
+    <section id="checkout" class="screen"><div class="head"><h2>受取・お支払い</h2><p>受取方法を選択してください</p></div><div class="card">
+      <label>お名前</label><input id="name" value="山田 花子">
+      <label>受取方法</label>
+      <div class="choice">
+        <label><input type="radio" name="delivery" value="pickup" checked onchange="updateCheckout()"><span>手渡し</span></label>
+        <label><input type="radio" name="delivery" value="shipping" onchange="updateCheckout()"><span>郵送</span></label>
+      </div>
+      <div id="shippingFields" class="hidden">
+        <label>郵便番号</label><input id="postal" inputmode="numeric" autocomplete="postal-code" placeholder="例：6991332" oninput="lookupAddress()">
+        <div id="postalStatus" class="hint">7桁入力すると住所を自動入力します</div>
+        <label>住所</label><textarea id="address" autocomplete="street-address" placeholder="都道府県・市区町村・番地"></textarea>
+      </div>
+      <label>決済方法</label><input id="paymentMethod" value="現金（手渡し時）" readonly>
+      <button id="reviewButton" class="btn wide" onclick="reviewOrder()">注文内容を確認</button>
+    </div></section>
     <section id="review" class="screen"><div class="head"><h2>注文内容を確認</h2><p>内容をご確認のうえ注文を確定してください</p></div><div id="reviewBody"></div></section>
     <section id="pay" class="screen"><div class="head"><h2>テスト決済</h2><p>実際の請求は発生しません</p></div><div class="card"><h3>Square Sandbox</h3><div id="payTotal" class="line total"></div><label>テストカード</label><input value="4242 4242 4242 4242" readonly><button class="btn wide" onclick="complete()">注文を確定する</button></div></section>
     <section id="complete" class="screen"><div class="head"><h2>ご注文ありがとうございます</h2></div><div class="card"><h3>テスト注文を受け付けました</h3><p id="completeText"></p><p id="lineStatus" class="hint"></p></div><div class="actions-grid"><button class="btn" onclick="show('orders')">注文内容を確認</button><button class="btn secondary" onclick="cancelOrder()">注文をキャンセル</button><button class="btn secondary" onclick="inquiry()">問い合わせ</button><button class="btn secondary" onclick="show('home')">商品一覧へ戻る</button></div></section>
     <section id="orders" class="screen"><div class="head"><h2>注文確認</h2><p>この端末で作成したテスト注文</p></div><div id="ordersBody"></div></section>
     <section id="info" class="screen"><div class="head"><h2>ショップ情報</h2></div><div class="card"><h3>たかひろ珈琲</h3><p>決済確認後、2〜3営業日以内に発送<br>送料 全国一律185円</p></div></section>
   </main>
-  <nav><button data-page="home" class="active" onclick="show('home')"><span>⌂</span>商品</button><button data-page="cart" onclick="show('cart')"><span>🛒</span>カート</button><button data-page="orders" onclick="show('orders')"><span>▤</span>注文</button><button data-page="info" onclick="show('info')"><span>ⓘ</span>情報</button></nav>
-</div><div id="toast" class="toast"></div>
-<script src="./assets.js"></script><script src="./config.js"></script><script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <nav>
+    <button data-page="home" class="active" onclick="show('home')"><span>⌂</span>商品</button>
+    <button data-page="cart" onclick="show('cart')"><span>🛒</span>カート</button>
+    <button data-page="orders" onclick="show('orders')"><span>▤</span>注文</button>
+    <button data-page="info" onclick="show('info')"><span>ⓘ</span>情報</button>
+  </nav>
+</div>
+<div id="toast" class="toast"></div>
+<script src="./assets.js"></script>
+<script src="./config.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-const defaults=[{name:'エチオピア イルガチェフェ',price:1980,note:'浅煎り・フローラルな香り',stock:12,icon:'🌸',image:'1'},{name:'季節のブレンド',price:1580,note:'中深煎り・バランスの良い味わい',stock:35,icon:'☕',image:'2'},{name:'デカフェ コロンビア',price:1780,note:'カフェインレス・優しい風味',stock:8,icon:'🌙',image:'3'}];
-let products=JSON.parse(localStorage.getItem('takahiro-products')||'null')||defaults,cart=[],selected=0,lastOrder=null,history=[],postalTimer=null;
-const yen=n=>'¥'+n.toLocaleString(),imageFor=(p,i)=>window.COFFEE_IMAGES?.[p.image]||window.COFFEE_IMAGES?.[String(i+1)]||`./img/${i+1}.jpg`;
+const defaults=[
+ {name:'エチオピア イルガチェフェ',price:1980,note:'浅煎り・フローラルな香り',stock:12,icon:'🌸',image:'1'},
+ {name:'季節のブレンド',price:1580,note:'中深煎り・バランスの良い味わい',stock:35,icon:'☕',image:'2'},
+ {name:'デカフェ コロンビア',price:1780,note:'カフェインレス・優しい風味',stock:8,icon:'🌙',image:'3'}
+];
+let products=JSON.parse(localStorage.getItem('takahiro-products')||'null')||defaults;
+let cart=[],selected=0,lastOrder=null,history=[],postalTimer=null;
+const yen=n=>'¥'+n.toLocaleString();
+const imageFor=(p,i)=>window.COFFEE_IMAGES?.[p.image]||window.COFFEE_IMAGES?.[String(i+1)]||`./img/${i+1}.jpg`;
 if(window.COFFEE_IMAGES?.header)document.querySelector('.hero').style.backgroundImage=`url("${window.COFFEE_IMAGES.header}")`;
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
 function show(id,push=true){const current=document.querySelector('.screen.active')?.id;if(push&&current&&current!==id)history.push(current);document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('nav button').forEach(e=>e.classList.toggle('active',e.dataset.page===id));if(id==='cart')renderCart();if(id==='orders')renderOrders();document.querySelector('main').scrollTop=0}
@@ -58,15 +92,102 @@ function deliveryMethod(){return document.querySelector('input[name="delivery"]:
 function totals(method=deliveryMethod()){const sub=cart.reduce((s,x)=>s+x.unit*x.qty,0),post=method==='shipping'&&sub<5000?185:0;return{sub,post,total:sub+post}}
 function renderCart(){const e=document.getElementById('cartBody');if(!cart.length){e.innerHTML='<div class="card"><h3>カートは空です</h3><button class="btn secondary wide" onclick="show(\'home\')">買い物を続ける</button></div>';return}const t=totals('shipping');e.innerHTML=cart.map((x,i)=>`<div class="card"><div class="line"><strong>${x.name}</strong><strong>${yen(x.unit*x.qty)}</strong></div><p>${x.size}g / ${x.grind} × ${x.qty}</p><button class="btn secondary wide" onclick="cart.splice(${i},1);renderCart()">削除</button></div>`).join('')+`<div class="card"><div class="line"><span>商品小計</span><span>${yen(t.sub)}</span></div><div class="line"><span>送料</span><span>郵送時 ${yen(t.post)} / 手渡し無料</span></div><div class="line total"><span>郵送時合計</span><span>${yen(t.total)}</span></div><button class="btn wide" onclick="show('checkout');updateCheckout()">配送・決済へ進む</button><button class="btn secondary wide" onclick="show('home')">買い物を続ける</button></div>`}
 function updateCheckout(){const shipping=deliveryMethod()==='shipping';document.getElementById('shippingFields').classList.toggle('hidden',!shipping);document.getElementById('paymentMethod').value=shipping?'Square（クレジットカード決済）':'現金（手渡し時）'}
-function lookupAddress(){clearTimeout(postalTimer);const input=document.getElementById('postal'),postal=input.value.replace(/\D/g,'').slice(0,7);input.value=postal;if(postal.length!==7){document.getElementById('postalStatus').textContent='7桁入力すると住所を自動入力します';return}postalTimer=setTimeout(async()=>{const status=document.getElementById('postalStatus');status.textContent='住所を検索しています…';try{const res=await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postal}`),data=await res.json(),address=data.results?.[0];if(!address)throw new Error('not found');document.getElementById('address').value=address.address1+address.address2+address.address3;status.textContent='住所を自動入力しました。番地以降を追記してください'}catch(e){status.textContent='住所が見つかりません。直接入力してください'}},350)}
-function reviewOrder(){if(!cart.length)return show('cart');const method=deliveryMethod(),shipping=method==='shipping',name=document.getElementById('name').value.trim(),postal=document.getElementById('postal').value.trim(),address=document.getElementById('address').value.trim();if(!name)return toast('お名前を入力してください');if(shipping&&(!postal||!address))return toast('郵便番号と住所を入力してください');const t=totals(method),payment=shipping?'Square（クレジットカード決済）':'現金';document.getElementById('reviewBody').innerHTML=`<div class="card">${cart.map(x=>`<div class="line"><span>${x.name}<br><small>${x.size}g / ${x.grind} × ${x.qty}</small></span><strong>${yen(x.unit*x.qty)}</strong></div>`).join('')}<div class="line"><span>受取方法</span><strong>${shipping?'郵送':'手渡し'}</strong></div><div class="line"><span>決済方法</span><strong>${payment}</strong></div>${shipping?`<p>〒${postal}<br>${address}</p>`:''}<div class="line"><span>送料</span><span>${yen(t.post)}</span></div><div class="line total"><span>合計</span><span>${yen(t.total)}</span></div><button class="btn wide" onclick="${shipping?'pay()':'complete()'}">${shipping?'Square決済へ進む':'現金払いで注文を確定'}</button><button class="btn secondary wide" onclick="show('checkout')">内容を修正する</button></div>`;show('review')}
+function lookupAddress(){
+  clearTimeout(postalTimer);
+  const postal=document.getElementById('postal').value.replace(/\D/g,'').slice(0,7);
+  document.getElementById('postal').value=postal;
+  if(postal.length!==7){document.getElementById('postalStatus').textContent='7桁入力すると住所を自動入力します';return}
+  postalTimer=setTimeout(async()=>{
+    const status=document.getElementById('postalStatus');
+    status.textContent='住所を検索しています…';
+    try{
+      const res=await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postal}`);
+      const data=await res.json(),address=data.results?.[0];
+      if(!address)throw new Error('not found');
+      document.getElementById('address').value=address.address1+address.address2+address.address3;
+      status.textContent='住所を自動入力しました。番地以降を追記してください';
+    }catch(e){status.textContent='住所が見つかりません。直接入力してください'}
+  },350)
+}
+function reviewOrder(){
+  if(!cart.length)return show('cart');
+  const method=deliveryMethod(),shipping=method==='shipping';
+  const name=document.getElementById('name').value.trim();
+  const postal=document.getElementById('postal').value.trim(),address=document.getElementById('address').value.trim();
+  if(!name)return toast('お名前を入力してください');
+  if(shipping&&(!postal||!address))return toast('郵便番号と住所を入力してください');
+  const t=totals(method),payment=shipping?'Square（クレジットカード決済）':'現金';
+  document.getElementById('reviewBody').innerHTML=`<div class="card">${cart.map(x=>`<div class="line"><span>${x.name}<br><small>${x.size}g / ${x.grind} × ${x.qty}</small></span><strong>${yen(x.unit*x.qty)}</strong></div>`).join('')}<div class="line"><span>受取方法</span><strong>${shipping?'郵送':'手渡し'}</strong></div><div class="line"><span>決済方法</span><strong>${payment}</strong></div>${shipping?`<p>〒${postal}<br>${address}</p>`:''}<div class="line"><span>送料</span><span>${yen(t.post)}</span></div><div class="line total"><span>合計</span><span>${yen(t.total)}</span></div><button class="btn wide" onclick="${shipping?'pay()':'complete()'}">${shipping?'Square決済へ進む':'現金払いで注文を確定'}</button><button class="btn secondary wide" onclick="show('checkout')">内容を修正する</button></div>`;
+  show('review')
+}
 function pay(){if(!cart.length)return show('cart');const t=totals('shipping');document.getElementById('payTotal').innerHTML=`<span>お支払い合計</span><span>${yen(t.total)}</span>`;show('pay')}
-async function complete(){const method=deliveryMethod(),shipping=method==='shipping',t=totals(method),orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]');lastOrder={number:'TEST-'+Date.now().toString().slice(-6),product:cart.map(x=>`${x.name} ${x.size}g×${x.qty}`).join('・'),amount:t.total,date:new Date().toLocaleString('ja-JP'),delivery:shipping?'郵送':'手渡し',payment:shipping?'Square（クレジットカード）':'現金',status:'受付済み'};orders.unshift(lastOrder);localStorage.setItem('takahiro-orders',JSON.stringify(orders.slice(0,20)));document.getElementById('completeText').innerHTML=`注文番号 <strong>${lastOrder.number}</strong><br>受取 ${lastOrder.delivery}<br>決済 ${lastOrder.payment}<br>商品 ${lastOrder.product}<br>合計 ${yen(lastOrder.amount)}<br><br>これはテスト注文です。`;cart=[];show('complete');toast('テスト注文が完了しました');await sendOrderAutomatically()}
+async function complete(){
+  const method=deliveryMethod(),shipping=method==='shipping',t=totals(method),orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]');
+  lastOrder={number:'TEST-'+Date.now().toString().slice(-6),name:document.getElementById('name').value.trim(),product:cart.map(x=>`${x.name} ${x.size}g×${x.qty}`).join('・'),amount:t.total,date:new Date().toLocaleString('ja-JP'),delivery:shipping?'郵送':'手渡し',payment:shipping?'Square（クレジットカード）':'現金',postal:shipping?document.getElementById('postal').value.trim():'',address:shipping?document.getElementById('address').value.trim():'',status:'受付済み'};
+  orders.unshift(lastOrder);localStorage.setItem('takahiro-orders',JSON.stringify(orders.slice(0,20)));
+  document.getElementById('completeText').innerHTML=`注文番号 <strong>${lastOrder.number}</strong><br>受取 ${lastOrder.delivery}<br>決済 ${lastOrder.payment}<br>商品 ${lastOrder.product}<br>合計 ${yen(lastOrder.amount)}<br><br>これはテスト注文です。`;
+  cart=[];show('complete');toast('テスト注文が完了しました');
+  await sendOrderAutomatically()
+}
 function renderOrders(){const orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]');document.getElementById('ordersBody').innerHTML=orders.length?orders.map(o=>`<div class="card"><h3>${o.number}　${o.status||'受付済み'}</h3><p>${o.product}<br>${o.delivery||''} / ${o.payment||''}<br>${yen(o.amount)}<br>${o.date}</p></div>`).join(''):'<div class="card"><h3>テスト注文はありません</h3></div>'}
-async function initLiff(){const id=window.APP_CONFIG?.liffId;if(!id||!window.liff)return;try{await liff.init({liffId:id});const openedInsideLine=/\bLine\//i.test(navigator.userAgent),launchedByLiff=new URLSearchParams(location.search).has('liff.state');if(openedInsideLine&&!liff.isInClient()&&!launchedByLiff){location.replace(`https://liff.line.me/${id}`);return}if(liff.isLoggedIn()){const p=await liff.getProfile();document.getElementById('profile').textContent=p.displayName+'さんとして接続中';document.getElementById('profile').classList.add('show');document.getElementById('name').value=p.displayName}}catch(e){console.error(e)}}
+async function initLiff(){
+  const id=window.APP_CONFIG?.liffId;
+  if(!id||!window.liff)return;
+  try{
+    await liff.init({liffId:id});
+    const openedInsideLine=/\bLine\//i.test(navigator.userAgent);
+    const launchedByLiff=new URLSearchParams(location.search).has('liff.state');
+
+    if(openedInsideLine&&!liff.isInClient()&&!launchedByLiff){
+      location.replace(`https://liff.line.me/${id}`);
+      return;
+    }
+
+    if(liff.isLoggedIn()){
+      const p=await liff.getProfile();
+      document.getElementById('profile').textContent=p.displayName+'さんとして接続中';
+      document.getElementById('profile').classList.add('show');
+      document.getElementById('name').value=p.displayName;
+    }
+  }catch(e){console.error(e)}
+}
 function orderMessage(prefix='たかひろ珈琲 テスト注文'){return `${prefix}\n注文番号: ${lastOrder.number}\n受取: ${lastOrder.delivery}\n決済: ${lastOrder.payment}\n商品: ${lastOrder.product}\n合計: ${yen(lastOrder.amount)}`}
-async function sendOrderAutomatically(){const status=document.getElementById('lineStatus');if(!window.liff||!liff.isInClient()){status.textContent='LINE外での確認のため、自動通知は行われませんでした。';return}try{await liff.sendMessages([{type:'text',text:orderMessage()}]);status.textContent='注文内容をLINEへ自動送信しました。'}catch(e){status.textContent='LINEへの自動送信に失敗しました。注文内容は注文確認から確認できます。'}}
-async function cancelOrder(){if(!lastOrder||lastOrder.status==='キャンセル済み')return toast('この注文はキャンセル済みです');const orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]'),order=orders.find(o=>o.number===lastOrder.number);if(order)order.status='キャンセル済み';lastOrder.status='キャンセル済み';localStorage.setItem('takahiro-orders',JSON.stringify(orders));document.getElementById('lineStatus').textContent='注文をキャンセルしました。';if(window.liff&&liff.isInClient())try{await liff.sendMessages([{type:'text',text:orderMessage('たかひろ珈琲 注文キャンセル')}])}catch(e){}toast('注文をキャンセルしました')}
-async function inquiry(){if(window.liff&&liff.isInClient()){try{await liff.sendMessages([{type:'text',text:`たかひろ珈琲へ問い合わせ\n${lastOrder?`注文番号: ${lastOrder.number}\n`:''}問い合わせを希望します。`}]);toast('問い合わせ内容をLINEへ送信しました');return}catch(e){}}document.getElementById('lineStatus').textContent='LINE内で開くと、問い合わせメッセージを送信できます。'}
-renderProducts();initLiff();
-</script></body></html>
+async function sendOrderAutomatically(){
+  const status=document.getElementById('lineStatus');
+  const api=window.APP_CONFIG?.apiBaseUrl?.replace(/\/$/,'');
+  if(api&&window.liff&&liff.isLoggedIn()){
+    try{
+      const response=await fetch(`${api}/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:liff.getIDToken(),order:lastOrder})});
+      if(!response.ok)throw new Error('notification failed');
+      status.textContent='LINE公式アカウントから注文確認メッセージを送信しました。';
+      return
+    }catch(e){console.error(e)}
+  }
+  if(!window.liff||!liff.isInClient()){status.textContent='注文通知APIが未設定のため、LINE通知は行われませんでした。';return}
+  try{await liff.sendMessages([{type:'text',text:orderMessage()}]);status.textContent='注文内容をLINEトークへ自動送信しました。'}catch(e){status.textContent='LINEへの自動送信に失敗しました。注文内容は注文確認から確認できます。'}
+}
+async function cancelOrder(){
+  if(!lastOrder||lastOrder.status==='キャンセル済み')return toast('この注文はキャンセル済みです');
+  const orders=JSON.parse(localStorage.getItem('takahiro-orders')||'[]'),order=orders.find(o=>o.number===lastOrder.number);
+  if(order)order.status='キャンセル済み';
+  lastOrder.status='キャンセル済み';localStorage.setItem('takahiro-orders',JSON.stringify(orders));
+  document.getElementById('lineStatus').textContent='注文をキャンセルしました。';
+  if(window.liff&&liff.isInClient())try{await liff.sendMessages([{type:'text',text:orderMessage('たかひろ珈琲 注文キャンセル')}])}catch(e){}
+  toast('注文をキャンセルしました')
+}
+async function inquiry(){
+  if(window.liff&&liff.isInClient()){
+    try{await liff.sendMessages([{type:'text',text:`たかひろ珈琲へ問い合わせ\n${lastOrder?`注文番号: ${lastOrder.number}\n`:''}問い合わせを希望します。`}]);toast('問い合わせ内容をLINEへ送信しました');return}catch(e){}
+  }
+  document.getElementById('lineStatus').textContent='LINE内で開くと、問い合わせメッセージを送信できます。'
+}
+function requestedPage(){
+  const params=new URLSearchParams(location.search);
+  let page=params.get('page'),state=params.get('liff.state');
+  if(!page&&state)try{page=new URL(state,location.origin).searchParams.get('page')}catch(e){}
+  return ['home','cart','orders','info'].includes(page)?page:'home'
+}
+renderProducts();show(requestedPage(),false);initLiff();
+</script>
+</body>
+</html>

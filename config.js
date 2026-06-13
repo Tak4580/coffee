@@ -6,8 +6,8 @@ window.APP_CONFIG = {
   lineOfficialAccountUrl: ''
 };
 
-// Google Apps ScriptはCORS応答を返さないため、ページ読込後にGAS用送信処理へ切り替えます。
-window.addEventListener('load', () => {
+// Google Apps ScriptはCORS応答を返さないため、ページ本体の読込後にGAS用送信処理へ切り替えます。
+function installGasOrderSender() {
   const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
   if (!api.startsWith('https://script.google.com/macros/s/') || !api.endsWith('/exec')) return;
 
@@ -31,4 +31,7 @@ window.addEventListener('load', () => {
       status.textContent = 'LINEへの注文通知に失敗しました。';
     }
   };
-});
+}
+
+setTimeout(installGasOrderSender, 0);
+window.addEventListener('load', installGasOrderSender);

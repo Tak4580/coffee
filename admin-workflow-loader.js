@@ -1,1 +1,8 @@
-(function(){const operations=document.getElementById('operations');if(operations)operations.id='operations-workflow-loading';const script=document.createElement('script');script.src='./admin-workflow.js?v=20260613-workflow2';script.onload=function(){if(operations)operations.id='operations'};document.head.appendChild(script)})();
+(function () {
+  function load() {
+    const script = document.createElement('script');
+    script.src = './admin-fixes.js?v=20260614-live-preview';
+    document.head.appendChild(script);
+  }
+  document.readyState === 'complete' ? load() : window.addEventListener('load', load);
+})();

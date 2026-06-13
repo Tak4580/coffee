@@ -16,9 +16,9 @@
 
 | 枠 | 表示 | アクション |
 |---|---|---|
-| 上段 | 珈琲豆を注文 | `https://liff.line.me/2010316929-viV90cPK` |
-| 左下 | 注文を確認 | `https://liff.line.me/2010316929-viV90cPK?page=orders` |
-| 中下 | 受取・配送案内 | `https://liff.line.me/2010316929-viV90cPK?page=info` |
+| 上段 | 珈琲豆を注文 | `https://liff.line.me/2010384179-FDCKBM32` |
+| 左下 | 注文を確認 | `https://liff.line.me/2010384179-FDCKBM32?page=orders` |
+| 中下 | 受取・配送案内 | `https://liff.line.me/2010384179-FDCKBM32?page=info` |
 | 右下 | 問い合わせ | テキスト「問い合わせ」送信 |
 
 ## 表示の考え方

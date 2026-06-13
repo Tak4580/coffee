@@ -10,7 +10,6 @@ window.APP_CONFIG = {
 function installGasOrderSender() {
   const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
   if (!api.startsWith('https://script.google.com/macros/s/') || !api.endsWith('/exec')) return;
-
   window.sendOrderAutomatically = async function () {
     const status = document.getElementById('lineStatus');
     if (!window.liff || !liff.isLoggedIn()) {
@@ -84,3 +83,21 @@ function updateOperationNotice() {
   notice.textContent = 'テスト運用中です。Square決済は模擬ですが、注文内容はGoogleスプレッドシートへ送信されます。';
 }
 window.addEventListener('load', updateOperationNotice);
+
+async function cancelOrderAutomatically() {
+  const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
+  if (!window.liff || !liff.isLoggedIn() || typeof lastOrder === 'undefined' || !lastOrder) return false;
+  await fetch(api, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify({ action: 'cancelOrder', idToken: liff.getIDToken(), orderNumber: lastOrder.number })
+  });
+  return true;
+}
+window.cancelOrderAutomatically = cancelOrderAutomatically;
+
+if (document.querySelector('.tabs')) {
+  const adminLineScript = document.createElement('script');
+  adminLineScript.src = './admin-line.js?v=20260613';
+  document.head.appendChild(adminLineScript);
+}

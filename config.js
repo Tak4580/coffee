@@ -25,7 +25,7 @@ function installGasOrderSender() {
         headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
         body: JSON.stringify({ idToken: liff.getIDToken(), order: lastOrder })
       });
-      status.textContent = 'LINE公式アカウントへ注文通知を送信しました。';
+      status.textContent = '注文データをGoogleスプレッドシートへ送信しました。LINE通知も処理しています。';
     } catch (error) {
       console.error(error);
       status.textContent = 'LINEへの注文通知に失敗しました。';

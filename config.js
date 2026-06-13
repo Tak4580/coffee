@@ -1,1 +1,139 @@
-const DEFAULT_GAS_URL='https://script.google.com/macros/s/AKfycbzVioAfZpAUi9jqUQ0ls90eEE0OA9D7xwN6hnLmwoC3iHv0bOp45a70yXCPzWw5J4zmig/exec';const savedGasUrl=localStorage.getItem('coffee-gas-url')||'',activeGasUrl=/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(savedGasUrl)?savedGasUrl:DEFAULT_GAS_URL;window.APP_CONFIG={liffId:'2010384179-FDCKBM32',apiBaseUrl:activeGasUrl,lineOfficialAccountUrl:''};function installGasOrderSender(){const api=window.APP_CONFIG.apiBaseUrl.replace(/\/$/,'');if(!api.startsWith('https://script.google.com/macros/s/')||!api.endsWith('/exec'))return;window.sendOrderAutomatically=async function(){const status=document.getElementById('lineStatus');if(!window.liff||!liff.isLoggedIn()){status.textContent='LINEログインを確認できないため、注文通知は行われませんでした。';return}try{await fetch(api,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({idToken:liff.getIDToken(),order:lastOrder})});status.textContent='注文データをGoogleスプレッドシートへ送信しました。LINE通知も処理しています。'}catch(error){console.error(error);status.textContent='LINEへの注文通知に失敗しました。'}}}setTimeout(installGasOrderSender,0);window.addEventListener('load',installGasOrderSender);async function ensureLineProfileStatus(){if(!window.liff)return;try{await liff.ready;if(!liff.isLoggedIn())return;const e=document.getElementById('profile');let name=liff.getDecodedIDToken()?.name||'';try{const p=await liff.getProfile();name=p.displayName||name}catch(error){console.warn('LINE profile unavailable',error)}e.textContent=name?name+'さんでログイン中です。':'LINEでログイン中です。';e.classList.add('show');if(name)document.getElementById('name').value=name}catch(error){console.warn('LIFF login status unavailable',error)}}window.addEventListener('load',ensureLineProfileStatus);function loadRemoteProducts(){if(!document.getElementById('home')||!document.getElementById('products')||typeof renderProducts!=='function')return;const api=window.APP_CONFIG.apiBaseUrl.replace(/\/$/,''),callback='receiveCoffeeProducts',script=document.createElement('script');window[callback]=function(data){if(data?.ok&&Array.isArray(data.products)&&data.products.length){products=data.products;renderProducts()}delete window[callback];script.remove()};script.onerror=function(){delete window[callback];script.remove();console.warn('商品データを取得できないため、初期商品を表示します。')};script.src=api+'?action=products&callback='+callback+'&t='+Date.now();document.head.appendChild(script)}window.addEventListener('load',loadRemoteProducts);function updateOperationNotice(){const e=document.querySelector('#home .notice');if(e)e.textContent='テスト運用中です。Square決済は模擬ですが、注文内容はGoogleスプレッドシートへ送信されます。'}window.addEventListener('load',updateOperationNotice);async function cancelOrderAutomatically(){const api=window.APP_CONFIG.apiBaseUrl.replace(/\/$/,'');if(!window.liff||!liff.isLoggedIn()||typeof lastOrder==='undefined'||!lastOrder)return false;await fetch(api,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({action:'cancelOrder',idToken:liff.getIDToken(),orderNumber:lastOrder.number})});return true}window.cancelOrderAutomatically=cancelOrderAutomatically;function installGasUrlSettings(){const input=document.getElementById('gasUrl');if(!input)return;input.readOnly=false;input.value=window.APP_CONFIG.apiBaseUrl;const actions=input.parentElement.querySelector('.actions');if(!actions||document.getElementById('saveGasUrlButton'))return;actions.insertAdjacentHTML('afterbegin','<button id="saveGasUrlButton" class="btn" type="button" onclick="saveGasUrlSetting()">GAS URLを保存</button><button class="btn secondary" type="button" onclick="resetGasUrlSetting()">標準URLに戻す</button>')}function saveGasUrlSetting(){const input=document.getElementById('gasUrl'),value=String(input?.value||'').trim().replace(/\/$/,'');if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(value)){if(typeof toast==='function')toast('正しいGASの /exec URLを入力してください');return}localStorage.setItem('coffee-gas-url',value);location.reload()}function resetGasUrlSetting(){localStorage.removeItem('coffee-gas-url');location.reload()}window.saveGasUrlSetting=saveGasUrlSetting;window.resetGasUrlSetting=resetGasUrlSetting;window.addEventListener('load',installGasUrlSettings);if(document.querySelector('.tabs')){const script=document.createElement('script');script.src='./admin-line.js?v=20260613-ux2';document.head.appendChild(script)}
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbzVioAfZpAUi9jqUQ0ls90eEE0OA9D7xwN6hnLmwoC3iHv0bOp45a70yXCPzWw5J4zmig/exec';
+const savedGasUrl = localStorage.getItem('coffee-gas-url') || '';
+const activeGasUrl = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(savedGasUrl)
+  ? savedGasUrl
+  : DEFAULT_GAS_URL;
+
+window.APP_CONFIG = {
+  liffId: '2010384179-FDCKBM32',
+  apiBaseUrl: activeGasUrl,
+  lineOfficialAccountUrl: ''
+};
+
+function installGasOrderSender() {
+  const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
+  if (!api.startsWith('https://script.google.com/macros/s/') || !api.endsWith('/exec')) return;
+  window.sendOrderAutomatically = async function () {
+    const status = document.getElementById('lineStatus');
+    if (!window.liff || !liff.isLoggedIn()) {
+      status.textContent = 'LINEログインを確認できないため、注文通知は行われませんでした。';
+      return;
+    }
+    try {
+      await fetch(api, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ idToken: liff.getIDToken(), order: lastOrder })
+      });
+      status.textContent = '注文データをGoogleスプレッドシートへ送信しました。LINE通知も処理しています。';
+    } catch (error) {
+      console.error(error);
+      status.textContent = 'LINEへの注文通知に失敗しました。';
+    }
+  };
+}
+setTimeout(installGasOrderSender, 0);
+window.addEventListener('load', installGasOrderSender);
+
+async function ensureLineProfileStatus() {
+  if (!window.liff) return;
+  try {
+    await liff.ready;
+    if (!liff.isLoggedIn()) return;
+    const profileElement = document.getElementById('profile');
+    let displayName = liff.getDecodedIDToken()?.name || '';
+    try {
+      const profile = await liff.getProfile();
+      displayName = profile.displayName || displayName;
+    } catch (profileError) {
+      console.warn('LINE profile unavailable', profileError);
+    }
+    profileElement.textContent = displayName ? displayName + 'さんでログイン中です。' : 'LINEでログイン中です。';
+    profileElement.classList.add('show');
+    if (displayName) document.getElementById('name').value = displayName;
+  } catch (error) {
+    console.warn('LIFF login status unavailable', error);
+  }
+}
+window.addEventListener('load', ensureLineProfileStatus);
+
+function loadRemoteProducts() {
+  if (!document.getElementById('home') || !document.getElementById('products') || typeof renderProducts !== 'function') return;
+  const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
+  const callback = 'receiveCoffeeProducts';
+  const script = document.createElement('script');
+  window[callback] = function (data) {
+    if (data?.ok && Array.isArray(data.products) && data.products.length) {
+      products = data.products;
+      renderProducts();
+    }
+    delete window[callback];
+    script.remove();
+  };
+  script.onerror = function () {
+    delete window[callback];
+    script.remove();
+    console.warn('商品データを取得できないため、初期商品を表示します。');
+  };
+  script.src = api + '?action=products&callback=' + callback + '&t=' + Date.now();
+  document.head.appendChild(script);
+}
+window.addEventListener('load', loadRemoteProducts);
+
+function updateOperationNotice() {
+  const notice = document.querySelector('#home .notice');
+  if (notice) notice.textContent = 'テスト運用中です。Square決済は模擬ですが、注文内容はGoogleスプレッドシートへ送信されます。';
+}
+window.addEventListener('load', updateOperationNotice);
+
+async function cancelOrderAutomatically() {
+  const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
+  if (!window.liff || !liff.isLoggedIn() || typeof lastOrder === 'undefined' || !lastOrder) return false;
+  await fetch(api, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify({ action: 'cancelOrder', idToken: liff.getIDToken(), orderNumber: lastOrder.number })
+  });
+  return true;
+}
+window.cancelOrderAutomatically = cancelOrderAutomatically;
+
+function installGasUrlSettings() {
+  const input = document.getElementById('gasUrl');
+  if (!input) return;
+  input.readOnly = false;
+  input.value = window.APP_CONFIG.apiBaseUrl;
+  const actions = input.parentElement.querySelector('.actions');
+  if (!actions || document.getElementById('saveGasUrlButton')) return;
+  actions.insertAdjacentHTML('afterbegin', '<button id="saveGasUrlButton" class="btn" type="button" onclick="saveGasUrlSetting()">GAS URLを保存</button><button class="btn secondary" type="button" onclick="resetGasUrlSetting()">標準URLに戻す</button>');
+}
+function saveGasUrlSetting() {
+  const input = document.getElementById('gasUrl');
+  const value = String(input?.value || '').trim().replace(/\/$/, '');
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(value)) {
+    if (typeof toast === 'function') toast('正しいGASの /exec URLを入力してください');
+    return;
+  }
+  localStorage.setItem('coffee-gas-url', value);
+  location.reload();
+}
+function resetGasUrlSetting() {
+  localStorage.removeItem('coffee-gas-url');
+  location.reload();
+}
+window.saveGasUrlSetting = saveGasUrlSetting;
+window.resetGasUrlSetting = resetGasUrlSetting;
+window.addEventListener('load', installGasUrlSettings);
+
+if (document.querySelector('.tabs')) {
+  const adminCompatibilityScript = document.createElement('script');
+  adminCompatibilityScript.src = './admin-line.js?v=20260613-workflow1';
+  adminCompatibilityScript.onload = function () {
+    const workflowScript = document.createElement('script');
+    workflowScript.src = './admin-workflow.js?v=20260613-workflow1';
+    document.head.appendChild(workflowScript);
+  };
+  document.head.appendChild(adminCompatibilityScript);
+}

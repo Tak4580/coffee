@@ -9,7 +9,7 @@ window.APP_CONFIG = {
 // Google Apps ScriptはCORS応答を返さないため、ページ読込後にGAS用送信処理へ切り替えます。
 window.addEventListener('load', () => {
   const api = window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '');
-  if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(api)) return;
+  if (!api.startsWith('https://script.google.com/macros/s/') || !api.endsWith('/exec')) return;
 
   window.sendOrderAutomatically = async function () {
     const status = document.getElementById('lineStatus');

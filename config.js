@@ -35,3 +35,30 @@ function installGasOrderSender() {
 
 setTimeout(installGasOrderSender, 0);
 window.addEventListener('load', installGasOrderSender);
+
+async function ensureLineProfileStatus() {
+  if (!window.liff) return;
+  try {
+    await liff.ready;
+    if (!liff.isLoggedIn()) return;
+
+    const profileElement = document.getElementById('profile');
+    let displayName = liff.getDecodedIDToken()?.name || '';
+    try {
+      const profile = await liff.getProfile();
+      displayName = profile.displayName || displayName;
+    } catch (profileError) {
+      console.warn('LINE profile unavailable', profileError);
+    }
+
+    profileElement.textContent = displayName
+      ? displayName + 'さんでログイン中です。'
+      : 'LINEでログイン中です。';
+    profileElement.classList.add('show');
+    if (displayName) document.getElementById('name').value = displayName;
+  } catch (error) {
+    console.warn('LIFF login status unavailable', error);
+  }
+}
+
+window.addEventListener('load', ensureLineProfileStatus);

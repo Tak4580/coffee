@@ -8,19 +8,19 @@
 <style>
 :root{--brown:#3b1d0f;--brown2:#5b3420;--gold:#b79a58;--ink:#271b14;--muted:#73675d;--line:#d9cfbb;--paper:#f4f0e3;--cream:#fbf8ef}
 *{box-sizing:border-box}body{margin:0;background:#e8e2d3;color:var(--ink);font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif}
-button,input,select,textarea{font:inherit}.app{max-width:520px;min-height:100dvh;margin:auto;background:var(--paper);display:flex;flex-direction:column}
+button,input,select,textarea{font:inherit}button{cursor:pointer;transition:background-color .16s,color .16s,border-color .16s,box-shadow .16s,transform .16s}button:not(:disabled):hover{transform:translateY(-1px)}button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.app{max-width:520px;min-height:100dvh;margin:auto;background:var(--paper);display:flex;flex-direction:column}
 header{height:58px;padding:0 14px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center;position:sticky;top:0;background:rgba(244,240,227,.96);z-index:5}
 header strong{text-align:center;font-size:18px;letter-spacing:.08em}header button{border:0;background:transparent;color:var(--ink);font-size:25px}.profile{display:none;padding:7px 16px;background:#e8dfc8;color:var(--brown);font-size:12px;text-align:center}.profile.show{display:block}
 main{flex:1;overflow:auto;padding:0 18px 112px}.hero{height:164px;margin:0 -18px 30px;background:url("./img/header.jpg") center 49%/cover no-repeat;position:relative}.hero::after{content:"";position:absolute;inset:auto 0 0;height:42px;background:linear-gradient(transparent,var(--paper))}
 .brand-copy{display:none}.ornament{display:flex;align-items:center;gap:13px;color:var(--gold);margin:0 0 26px}.ornament::before,.ornament::after{content:"";height:1px;background:var(--gold);flex:1}.ornament span{font-size:20px;transform:rotate(-12deg)}
 .screen{display:none}.screen.active{display:block}.head{margin-bottom:14px}.head h2{margin:0;font-size:20px}.head p{margin:4px 0 0;color:var(--muted);font-size:13px}
 .product,.card{border:1px solid #ded6c7;border-radius:15px;padding:13px;margin-bottom:13px;background:rgba(255,255,255,.82);box-shadow:0 4px 12px rgba(59,29,15,.08)}.product{display:grid;grid-template-columns:68px 1fr auto;gap:12px;align-items:center}.product-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 7px #3b1d0f22}.product h3,.card h3{margin:0 0 3px;font-size:15px;letter-spacing:.02em}.product p,.card p{margin:0;color:var(--muted);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;font-size:11px;line-height:1.5}.price{font-size:16px;font-weight:800;color:var(--ink);margin-top:4px}
-.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:700;background:var(--brown);color:#fff;box-shadow:inset 0 0 0 1px #2b1309}.btn.secondary{background:var(--cream);color:var(--brown);border:1px solid var(--line);box-shadow:none}.wide{width:100%;margin-top:12px}
+.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:700;background:var(--brown);color:#fff;box-shadow:inset 0 0 0 1px #2b1309}.btn.secondary{background:var(--cream);color:var(--brown);border:1px solid var(--line);box-shadow:none}.btn:not(:disabled):hover{background:var(--gold);color:var(--brown);box-shadow:0 5px 13px #3b1d0f24}.btn.secondary:not(:disabled):hover{background:var(--brown);color:#fff;border-color:var(--brown)}.wide{width:100%;margin-top:12px}
 label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;background:#fff}textarea{min-height:80px}
 .choice{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:7px}.choice label{margin:0}.choice input{position:absolute;opacity:0}.choice span{display:block;padding:12px 8px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:center;color:var(--muted)}.choice input:checked+span{border-color:var(--brown);background:#efe6d3;color:var(--brown);font-weight:700}.hint{font-size:11px;color:var(--muted);margin-top:6px}.actions-grid{display:grid;gap:8px;margin-top:12px}.hidden{display:none!important}
 .line{display:flex;justify-content:space-between;gap:12px;margin:9px 0;font-size:13px}.total{border-top:1px solid var(--line);padding-top:12px;font-size:16px;font-weight:800}
 nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid #e6e0d5;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:10;box-shadow:0 -4px 15px #3b1d0f0d}
-nav button{border:0;background:#fff;color:#302b27;font-size:11px;padding:4px}nav span{display:block;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:23px;line-height:1.1;margin-bottom:3px}nav button.active{color:var(--brown);font-weight:800}
+nav button{border:0;background:#fff;color:#302b27;font-size:11px;padding:4px;border-radius:9px}nav button:hover{background:var(--cream);color:var(--brown)}nav span{display:block;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:23px;line-height:1.1;margin-bottom:3px}nav button.active{color:var(--brown);font-weight:800}
 .notice{padding:8px 11px;border-radius:999px;background:#e9dfc6;color:#6f5527;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;font-size:10px;margin-bottom:18px;text-align:center}.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,12px);background:var(--brown);color:#fff;padding:11px 16px;border-radius:10px;opacity:0;transition:.2s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(min-width:600px){body{padding:24px}.app{min-height:calc(100dvh - 48px);border-radius:28px;overflow:hidden;box-shadow:0 20px 50px #0f172a22}nav{bottom:24px;border-radius:0 0 28px 28px}}
 </style>
@@ -144,10 +144,15 @@ async function initLiff(){
     }
 
     if(liff.isLoggedIn()){
-      const p=await liff.getProfile();
-      document.getElementById('profile').textContent=p.displayName+'さんとして接続中';
-      document.getElementById('profile').classList.add('show');
-      document.getElementById('name').value=p.displayName;
+      const profileElement=document.getElementById('profile');
+      let displayName=liff.getDecodedIDToken()?.name||'';
+      try{
+        const p=await liff.getProfile();
+        displayName=p.displayName||displayName;
+      }catch(profileError){console.warn('LINE profile unavailable',profileError)}
+      profileElement.textContent=displayName?displayName+'さんでログイン中です。':'LINEでログイン中です。';
+      profileElement.classList.add('show');
+      if(displayName)document.getElementById('name').value=displayName;
     }
   }catch(e){console.error(e)}
 }
@@ -157,9 +162,13 @@ async function sendOrderAutomatically(){
   const api=window.APP_CONFIG?.apiBaseUrl?.replace(/\/$/,'');
   if(api&&window.liff&&liff.isLoggedIn()){
     try{
-      const response=await fetch(`${api}/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:liff.getIDToken(),order:lastOrder})});
-      if(!response.ok)throw new Error('notification failed');
-      status.textContent='LINE公式アカウントから注文確認メッセージを送信しました。';
+      const payload=JSON.stringify({idToken:liff.getIDToken(),order:lastOrder});
+      const isGas=/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(api);
+      const response=await fetch(isGas?api:`${api}/orders`,isGas
+        ?{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:payload}
+        :{method:'POST',headers:{'Content-Type':'application/json'},body:payload});
+      if(!isGas&&!response.ok)throw new Error('notification failed');
+      status.textContent=isGas?'LINE公式アカウントへ注文通知を送信しました。':'LINE公式アカウントから注文確認メッセージを送信しました。';
       return
     }catch(e){console.error(e)}
   }
@@ -172,6 +181,7 @@ async function cancelOrder(){
   if(order)order.status='キャンセル済み';
   lastOrder.status='キャンセル済み';localStorage.setItem('takahiro-orders',JSON.stringify(orders));
   document.getElementById('lineStatus').textContent='注文をキャンセルしました。';
+  if(window.cancelOrderAutomatically)try{await window.cancelOrderAutomatically()}catch(e){console.error(e)}
   if(window.liff&&liff.isInClient())try{await liff.sendMessages([{type:'text',text:orderMessage('たかひろ珈琲 注文キャンセル')}])}catch(e){}
   toast('注文をキャンセルしました')
 }

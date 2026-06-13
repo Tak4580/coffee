@@ -113,7 +113,17 @@ function renderProducts(){const list=document.getElementById('productList');docu
 function phaseForOrder(order){return Object.keys(ORDER_PHASES).find(phase=>ORDER_PHASES[phase].includes(order.status))||'inprogress'}
 function resetCompletedPage(){completedPage=1}
 function selectOrderPhase(phase){selectedOrderPhase=phase;if(phase==='completed')resetCompletedPage();document.querySelectorAll('.order-phase-tab').forEach(button=>button.classList.toggle('active',button.dataset.phase===phase));renderOrders()}
-function chatsForOrder(order){const since=Number(order.receivedTimestamp)||0;return chatData.filter(chat=>chat.lineUserId===order.lineUserId&&(chat.orderNumber===order.number||(!chat.orderNumber&&Number(chat.timestamp)>=since))).sort((a,b)=>a.timestamp-b.timestamp)}
+function chatsForOrder(order){
+  const lineUserId=String(order.lineUserId||'').trim(),orderNumber=String(order.number||'').trim(),since=Number(order.receivedTimestamp)||0;
+  const nextOrder=orderData.filter(candidate=>String(candidate.lineUserId||'').trim()===lineUserId&&Number(candidate.receivedTimestamp)>since).sort((a,b)=>a.receivedTimestamp-b.receivedTimestamp)[0];
+  const until=Number(nextOrder?.receivedTimestamp)||Infinity;
+  return chatData.filter(chat=>{
+    if(String(chat.lineUserId||'').trim()!==lineUserId)return false;
+    if(String(chat.orderNumber||'').trim()===orderNumber)return true;
+    const timestamp=Number(chat.timestamp)||0;
+    return !String(chat.orderNumber||'').trim()&&timestamp>=since&&timestamp<until
+  }).sort((a,b)=>a.timestamp-b.timestamp)
+}
 function renderOrderChat(order,index){
   if(!order.lineUserId)return'<div class="order-chat"><div class="order-chat-head"><strong>注文者とのLINE</strong></div><div class="chat-disabled">LINE未連携の注文のため、会話表示と送信はできません。</div></div>';
   const chats=chatsForOrder(order);

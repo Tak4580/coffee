@@ -19,10 +19,10 @@ button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:point
 <body>
 <header><h1>たかひろ珈琲 テスト管理画面</h1><a href="./">ユーザー画面を開く</a></header>
 <main>
-  <div class="notice">テスト版です。変更はこのブラウザ内に保存され、同じ端末のユーザー画面へ反映されます。GitHub上のデータは変更しません。</div>
+  <div class="notice">商品変更はこのブラウザ内だけに保存されます。注文データの正式な保存先はGoogleスプレッドシート「たかひろ珈琲 注文管理」です。</div>
   <h2>商品管理</h2><div id="products"></div>
   <div class="actions"><button class="primary" onclick="add()">商品を追加</button><button class="primary" onclick="save()">変更を保存</button><button class="secondary" onclick="resetData()">初期値に戻す</button></div>
-  <h2>テスト注文</h2><div id="orders" class="orders"></div>
+  <h2>この端末のテスト注文</h2><div id="orders" class="orders"></div>
 </main>
 <script>
 const defaults=[

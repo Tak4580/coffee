@@ -35,7 +35,7 @@ nav button{border:0;background:#fff;color:#302b27;font-size:11px;padding:4px;bor
       <div class="notice">テスト版です。決済・注文は実際には送信されません。</div>
       <div class="ornament"><span>⌁</span></div>
       <div class="head"><h2>おすすめ商品</h2><p>お好みの豆を選んでください</p></div>
-      <div id="products"></div>
+      <div id="products"><div class="card"><p>商品を読み込んでいます...</p></div></div>
     </section>
     <section id="detail" class="screen"><div class="head"><h2>商品詳細</h2><p>容量・挽き方・数量を選択</p></div><div id="detailCard"></div></section>
     <section id="cart" class="screen"><div class="head"><h2>カート</h2><p>注文内容をご確認ください</p></div><div id="cartBody"></div></section>
@@ -72,12 +72,7 @@ nav button{border:0;background:#fff;color:#302b27;font-size:11px;padding:4px;bor
 <script src="./config.js"></script>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-const defaults=[
- {name:'エチオピア イルガチェフェ',price:1980,note:'浅煎り・フローラルな香り',stock:12,icon:'🌸',image:'1'},
- {name:'季節のブレンド',price:1580,note:'中深煎り・バランスの良い味わい',stock:35,icon:'☕',image:'2'},
- {name:'デカフェ コロンビア',price:1780,note:'カフェインレス・優しい風味',stock:8,icon:'🌙',image:'3'}
-];
-let products=JSON.parse(localStorage.getItem('takahiro-products')||'null')||defaults;
+let products=[];
 let cart=[],selected=0,lastOrder=null,history=[],postalTimer=null;
 const yen=n=>'¥'+n.toLocaleString();
 const imageFor=(p,i)=>window.COFFEE_IMAGES?.[p.image]||window.COFFEE_IMAGES?.[String(i+1)]||`./img/${i+1}.jpg`;
@@ -85,7 +80,7 @@ if(window.COFFEE_IMAGES?.header)document.querySelector('.hero').style.background
 function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
 function show(id,push=true){const current=document.querySelector('.screen.active')?.id;if(push&&current&&current!==id)history.push(current);document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('nav button').forEach(e=>e.classList.toggle('active',e.dataset.page===id));if(id==='cart')renderCart();if(id==='orders')renderOrders();document.querySelector('main').scrollTop=0}
 function back(){history.length?show(history.pop(),false):show('home',false)}
-function renderProducts(){document.getElementById('products').innerHTML=products.map((p,i)=>`<div class="product"><img class="product-photo" src="${imageFor(p,i)}" alt=""><div><h3>${p.name}</h3><p>${p.note}<br>在庫 ${p.stock}個</p><div class="price">${yen(p.price)} / 200g</div></div><button class="btn" onclick="openDetail(${i})">選ぶ</button></div>`).join('')}
+function renderProducts(){document.getElementById('products').innerHTML=products.length?products.map((p,i)=>`<div class="product"><img class="product-photo" src="${imageFor(p,i)}" alt=""><div><h3>${p.name}</h3><p>${p.note}<br>在庫 ${p.stock}個</p><div class="price">${yen(p.price)} / 200g</div></div><button class="btn" onclick="openDetail(${i})">選ぶ</button></div>`).join(''):'<div class="card"><p>現在販売中の商品はありません。</p></div>'}
 function openDetail(i){selected=i;const p=products[i];document.getElementById('detailCard').innerHTML=`<div class="card"><img src="${imageFor(p,i)}" alt="" style="width:150px;height:150px;object-fit:cover;border-radius:50%;display:block;margin:0 auto 18px"><h3>${p.name}</h3><p>${p.note}</p><div class="price">${yen(p.price)} / 200g</div><label>容量</label><select id="size"><option value="200">200g</option><option value="400" selected>400g</option><option value="1000">1kg</option></select><label>挽き方</label><select id="grind"><option>豆のまま</option><option selected>中挽き</option><option>細挽き</option><option>粗挽き</option></select><label>数量</label><select id="qty"><option>1</option><option>2</option><option>3</option></select><button class="btn wide" onclick="addCart()">カートに入れる</button></div>`;show('detail')}
 function addCart(){const p=products[selected],size=+document.getElementById('size').value,qty=+document.getElementById('qty').value;cart.push({name:p.name,size,qty,grind:document.getElementById('grind').value,unit:Math.round(p.price*size/200)});toast('カートに追加しました');show('cart')}
 function deliveryMethod(){return document.querySelector('input[name="delivery"]:checked')?.value||'pickup'}
@@ -197,7 +192,7 @@ function requestedPage(){
   if(!page&&state)try{page=new URL(state,location.origin).searchParams.get('page')}catch(e){}
   return ['home','cart','orders','info'].includes(page)?page:'home'
 }
-renderProducts();show(requestedPage(),false);initLiff();
+show(requestedPage(),false);initLiff();
 </script>
 </body>
 </html>
